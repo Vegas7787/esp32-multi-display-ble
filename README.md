@@ -1,31 +1,29 @@
 # esp32-multi-display-ble
 
-# 🚀 ESP32 Multi-Display BLE Controller (E-Ink + Serial Protocol)
-
-## 📌 Overview
+## Overview
 
 This project is a custom ESP32 firmware that combines:
 
-* 📡 **Custom UART protocol**
-* 🖥️ **Multi E-Ink display control (3 displays)**
-* 📲 **BLE keyboard emulation**
-* ⚡ **Real-time multitasking (FreeRTOS)**
+* **Custom UART protocol**
+* **Multi E-Ink display control (3 displays)**
+* **BLE keyboard emulation**
+* **Real-time multitasking (FreeRTOS)**
 
 The device receives commands and images via Serial, updates E-Ink displays, and triggers BLE keyboard actions using physical buttons.
 
 ---
 
-## ⚙️ Features
+## Features
 
-* 📡 Binary UART protocol with checksum validation
-* 🖼️ Image upload and rendering on **3 independent E-Ink displays**
-* 🎮 Button-triggered BLE keyboard actions
-* ⚡ Dual-core task handling (Serial + BLE)
-* 🧩 Modular and scalable architecture
+* Binary UART protocol with checksum validation
+* Image upload and rendering on **3 independent E-Ink displays**
+* Button-triggered BLE keyboard actions
+* Dual-core task handling (Serial + BLE)
+* Modular and scalable architecture
 
 ---
 
-## 🏗️ System Architecture
+## System Architecture
 
 ### Tasks (FreeRTOS)
 
@@ -51,7 +49,7 @@ The device receives commands and images via Serial, updates E-Ink displays, and 
 
 ---
 
-## 📡 Communication Protocol
+## Communication Protocol
 
 Custom binary protocol:
 
@@ -65,34 +63,34 @@ Custom binary protocol:
 
 ---
 
-### 📦 Packet Types
+### Packet Types
 
-#### 🔹 Type 0xF* - Sending New Data
+#### Type 0xF* - Sending New Data
 
-#### 🔹 Type 0x0* - Sending Again
+#### Type 0x0* - Sending Again
 
-#### 🔹 Type 0x*0 - Select Display
+#### Type 0x*0 - Select Display
 
 * Sets active display (key_id)
 
-#### 🔹 Type 0x01 - Image Data
+#### Type 0x*1 - Image Data
 
 * Sends image bytes to display buffer
 
-#### 🔹 Type 0x02 - Action Data
+#### Type 0x02 - Action Data
 
 * Defines BLE keyboard action (key sequence)
 
 ---
 
-### ✅ Response Codes
+### Response Codes
 
 * `0x06` → ACK (valid packet)
-* `0x15` → NACK (invalid checksum)
+* `0x15` → NACK (invalid packet)
 
 ---
 
-## 🖥️ Display System
+## Display System
 
 * 3 independent E-Ink displays
 * Each display has:
@@ -112,7 +110,7 @@ Custom binary protocol:
 
 ---
 
-## 📲 BLE Keyboard Logic
+## BLE Keyboard Logic
 
 * Uses BLE HID keyboard
 * Supports:
@@ -128,7 +126,7 @@ Custom binary protocol:
 
 ---
 
-## 🔘 Input Handling
+## Input Handling
 
 Each display has a dedicated button:
 
@@ -140,7 +138,7 @@ Each display has a dedicated button:
 
 ---
 
-## ⚙️ Hardware
+## Hardware
 
 * ESP32
 * 3 × E-Ink displays
@@ -150,7 +148,7 @@ Each display has a dedicated button:
 
 ---
 
-## ▶️ How to Run
+## How to Run
 
 1. Build & upload:
 
@@ -177,7 +175,7 @@ pio device monitor
 
 ---
 
-## ⚠️ Challenges
+## Challenges
 
 * Reliable UART parsing with partial data
 * Synchronizing image transfer
@@ -186,7 +184,7 @@ pio device monitor
 
 ---
 
-## ✅ Solutions
+## Solutions
 
 * Implemented **state machine parser**
 * Added **checksum validation**
@@ -205,14 +203,3 @@ This project demonstrates:
 * BLE HID integration
 * multi-device hardware control
 
----
-
-## 🎥 Demo
-
-(Add video or GIF here)
-
----
-
-## 🧑‍💻 Author
-
-Your Name
