@@ -166,7 +166,7 @@ pio device monitor
 
 ---
 
-## 🧪 Example Use Cases
+## Example Use Cases
 
 * Custom macro keyboard
 * Smart control panel
@@ -193,7 +193,7 @@ pio device monitor
 
 ---
 
-## 📈 Why this project matters
+## Why this project matters
 
 This project demonstrates:
 
