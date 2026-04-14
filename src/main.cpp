@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SPI.h>
 #include <BleKeyboard.h>
+#include <Preferences.h>
 #include "Display_EPD_W21_spi.h"
 #include "Display_EPD_W21.h"
 #include "Ap_29demo.h"
@@ -40,6 +41,7 @@ enum State
 
 State state = WAIT_HEADER_1;
 BleKeyboard bleKeyboard;
+Preferences prefs;
 bool justConnected = false;
 int key_id;
 int k = 0;
@@ -61,6 +63,8 @@ void get_img(uint8_t *buffer);
 void show_img(int id);
 void serialTask(void *param);
 void bleTask(void *param);
+void save_action(int id, vector<uint8_t> &action);
+void load_action(int id, vector<uint8_t> &action);
 
 void setup()
 {
@@ -91,6 +95,12 @@ void setup()
     SPI.beginTransaction(SPISettings(10000000, MSBFIRST, SPI_MODE0));
 
     bleKeyboard.begin();
+
+    for (display &d : displays)
+    {
+        load_action(d.id, d.action);
+    }
+    
 
     xTaskCreatePinnedToCore(serialTask, "serialTask", 4096, NULL, 1, NULL, 0);
     xTaskCreatePinnedToCore(bleTask, "bleTask", 4096, NULL, 1, NULL, 1);
@@ -282,6 +292,7 @@ void get_img(uint8_t *buffer)
             state = WAIT_HEADER_1;
             displays[key_id - 1].action.clear();
             displays[key_id - 1].action = new_action;
+            save_action(key_id, new_action);
             new_action.clear();
             k++;
             received = 0;
@@ -291,4 +302,34 @@ void get_img(uint8_t *buffer)
             break;
         }
     }
+}
+
+void save_action(int id, vector<uint8_t> &action)
+{
+    prefs.begin("keys", false);
+    String key = "act" + String(id);
+
+    prefs.putBytes(key.c_str(), action.data(), action.size());
+
+    prefs.putUChar((key + "_size").c_str(), action.size());
+
+    prefs.end();
+}
+
+void load_action(int id, vector<uint8_t> &action)
+{
+    prefs.begin("keys", true);
+
+    String key = "act" + String(id);
+    String sizeKey = key + "_size";
+
+    uint8_t size = prefs.getUChar(sizeKey.c_str(), 0);
+
+    if (size > 0)
+    {
+        action.resize(size);
+        prefs.getBytes(key.c_str(), action.data(), size);
+    }
+
+    prefs.end();
 }
